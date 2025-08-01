@@ -1,0 +1,11 @@
+### **Evaluation Criteria of HEval Metric**
+
+We evaluate LLM outputs through **manual validation**, assessing whether they **semantically** cover the ground truth root causes rather than relying on exact string matches.
+Specifically, the *HEval* score is calculated as a weighted sum of three human-assessed criteria: **(1) Root Cause Recall (30%), (2) Theoretical Consistency (30%), and (3) Evidence Authenticity (40%)**.
+
+| **Evaluation Dimension**                                     | **Weight** | **Scoring Criteria**                                         | **Score Range**                                              |
+| ------------------------------------------------------------ | ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **1. Root Cause Recall**<br>(Coverage of Relevant Root Causes) | **30%**    | - **High (21-30 pts)**: No omissions/redundancies<br> - **Medium (11-20 pts)**: ≤1 minor root cause omitted<br> - **Low (1-10 pts)**: Coverage ≤30% or includes many irrelevant items<br>- **Unsatisfied (0 pts)**: No root cause covered | Total = 0 **(if unsatisfied)**<br>Total = Recall+ Consistency + Authenticity  **(if satisfied)** |
+| **2. Theoretical Consistency**<br>(Alignment with Theoretical Knowledge) | **30%**    | - **High (21-30 pts)**: Rigorous reasoning chain, fully complies with domain axioms (e.g., transitivity, commutativity)<br>- **Medium (11-20 pts)**: Main logic correct, minor unverified assumptions<br>- **Low (1-10 pts)**: Core logic violates fundamental principles (e.g., reversed causality)<br>- **Unsatisfied (0 pts)**: Completely chaotic or self-contradictory logic | Only applies if **Recall** is satisfied                      |
+| **3. Evidence Authenticity**<br>(Free of Reasoning Hallucinations) | **40%**    | - **High (31-40 pts)**: All evidence traceable to input / authoritative sources, no fabrication, multi-verified<br>- **Medium (11-30 pts)**: Main evidence reliable, minor reasonable assumptions (must be labeled)<br>- **Low (1-10 pts)**: Key evidence lacks sources or is self-contradictory<br>- **Unsatisfied (0 pts)**: Evidence entirely fabricated or severely distorted | Only applies if **Recall** is satisfied                      |
+

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <cn>
+    <PARAM KEY='max_active_statements' VALUE='-1'/>
+    <PARAM KEY='bypass_workload_manager' VALUE='on'/>
+    <PARAM KEY='enable_dynamic_workload' VALUE='off'/>
+    <PARAM KEY='gtm_option' VALUE='1'/>
+    <PARAM KEY='wal_buffers' VALUE='64MB'/>
+    <PARAM KEY='max_wal_senders' VALUE='20'/>
+    <PARAM KEY='xloginsert_locks' VALUE='16'/>
+    <PARAM KEY='max_size_for_xlog_prune' VALUE='256GB'/>
+    <PARAM KEY='checkpoint_segments' VALUE='128'/>
+    <PARAM KEY='wal_keep_segments' VALUE='128'/>
+    <PARAM KEY='max_io_capacity' VALUE='512000'/>
+    <PARAM KEY='shared_buffers' VALUE='512MB'/>
+    <PARAM KEY='max_prepared_transactions' VALUE='200'/>
+    <PARAM KEY='maintenance_work_mem' VALUE='256MB'/>
+    <PARAM KEY='standby_shared_buffers_fraction' VALUE='1'/>
+    <PARAM KEY='local_syscache_threshold' VALUE='16MB'/>
+    <PARAM KEY='segment_buffers' VALUE='8MB'/>
+    <PARAM KEY='max_files_per_process' VALUE='1024'/>
+    <PARAM KEY='recovery_max_workers' VALUE='4'/>
+    <PARAM KEY='enable_data_replicate' VALUE='off'/>
+    <PARAM KEY='recovery_time_target' VALUE='60'/>
+    <PARAM KEY='enable_slot_log' VALUE='on'/>
+    <PARAM KEY='max_replication_slots' VALUE='20'/>
+    <PARAM KEY='ssl' VALUE='on'/>
+    <PARAM KEY='session_timeout' VALUE='1800'/>
+    <PARAM KEY='password_effect_time' VALUE='0'/>
+    <PARAM KEY='password_reuse_time' VALUE='0'/>
+    <PARAM KEY='autoanalyze_timeout' VALUE='300'/>
+    <PARAM KEY='sql_beta_feature' VALUE='sel_semi_poisson,sel_expr_instr,rand_cost_opt,param_path_opt,page_est_opt'/>
+    <PARAM KEY='effective_cache_size' VALUE='256MB'/>
+    <PARAM KEY='max_pool_size' VALUE='1024'/>
+    <PARAM KEY='max_coordinators' VALUE='128'/>
+    <PARAM KEY='max_datanodes' VALUE='256'/>
+    <PARAM KEY='max_connections' VALUE='120'/>
+    <PARAM KEY='enable_thread_pool' VALUE='on'/>
+    <PARAM KEY='enable_stateless_pooler_reuse' VALUE='on'/>
+    <PARAM KEY='thread_pool_attr' VALUE='64,2,(nobind)'/>
+    <PARAM KEY='log_line_prefix' VALUE='%m %n %u %d %h %p %S %x %a'/>
+    <PARAM KEY='log_min_duration_statement' VALUE='3000'/>
+    <PARAM KEY='vacuum_cost_delay' VALUE='1'/>
+    <PARAM KEY='vacuum_cost_limit' VALUE='1000'/>
+    <PARAM KEY='enable_wdr_snapshot' VALUE='on'/>
+    <PARAM KEY='instr_unique_sql_count' VALUE='200000'/>
+    <PARAM KEY='track_stmt_stat_level' VALUE='OFF,L0'/>
+    <PARAM KEY='timezone' VALUE='PRC'/>
+    <PARAM KEY='log_timezone' VALUE='PRC'/>
+  </cn>
+  <dn>
+    <PARAM KEY='max_active_statements' VALUE='-1'/>
+    <PARAM KEY='bypass_workload_manager' VALUE='on'/>
+    <PARAM KEY='enable_dynamic_workload' VALUE='off'/>
+    <PARAM KEY='gtm_option' VALUE='1'/>
+    <PARAM KEY='wal_buffers' VALUE='256MB'/>
+    <PARAM KEY='max_wal_senders' VALUE='20'/>
+    <PARAM KEY='xloginsert_locks' VALUE='16'/>
+    <PARAM KEY='max_size_for_xlog_prune' VALUE='256GB'/>
+    <PARAM KEY='checkpoint_segments' VALUE='128'/>
+    <PARAM KEY='wal_keep_segments' VALUE='128'/>
+    <PARAM KEY='max_io_capacity' VALUE='512000'/>
+    <PARAM KEY='max_process_memory' VALUE='20GB'/>
+    <PARAM KEY='shared_buffers' VALUE='4GB'/>
+    <PARAM KEY='max_prepared_transactions' VALUE='400'/>
+    <PARAM KEY='maintenance_work_mem' VALUE='256MB'/>
+    <PARAM KEY='standby_shared_buffers_fraction' VALUE='1'/>
+    <PARAM KEY='local_syscache_threshold' VALUE='16MB'/>
+    <PARAM KEY='segment_buffers' VALUE='8MB'/>
+    <PARAM KEY='max_files_per_process' VALUE='1024'/>
+    <PARAM KEY='recovery_max_workers' VALUE='4'/>
+    <PARAM KEY='enable_data_replicate' VALUE='off'/>
+    <PARAM KEY='recovery_time_target' VALUE='60'/>
+    <PARAM KEY='recovery_parse_workers' VALUE='1'/>
+    <PARAM KEY='recovery_redo_workers' VALUE='1'/>
+    <PARAM KEY='enable_slot_log' VALUE='on'/>
+    <PARAM KEY='max_replication_slots' VALUE='20'/>
+    <PARAM KEY='session_timeout' VALUE='1800'/>
+    <PARAM KEY='password_effect_time' VALUE='0'/>
+    <PARAM KEY='password_reuse_time' VALUE='0'/>
+    <PARAM KEY='autoanalyze_timeout' VALUE='300'/>
+    <PARAM KEY='sql_beta_feature' VALUE='sel_semi_poisson,sel_expr_instr,rand_cost_opt,param_path_opt,page_est_opt'/>
+    <PARAM KEY='effective_cache_size' VALUE='2GB'/>
+    <PARAM KEY='max_pool_size' VALUE='1024'/>
+    <PARAM KEY='max_coordinators' VALUE='128'/>
+    <PARAM KEY='max_datanodes' VALUE='256'/>
+    <PARAM KEY='max_connections' VALUE='500'/>
+    <PARAM KEY='enable_thread_pool' VALUE='on'/>
+    <PARAM KEY='enable_stateless_pooler_reuse' VALUE='on'/>
+    <PARAM KEY='thread_pool_attr' VALUE='128,2,(nobind)'/>
+    <PARAM KEY='log_line_prefix' VALUE='%m %n %u %d %h %p %S %x %a'/>
+    <PARAM KEY='log_min_duration_statement' VALUE='3000'/>
+    <PARAM KEY='vacuum_cost_delay' VALUE='1'/>
+    <PARAM KEY='vacuum_cost_limit' VALUE='1000'/>
+    <PARAM KEY='enable_wdr_snapshot' VALUE='on'/>
+    <PARAM KEY='instr_unique_sql_count' VALUE='200000'/>
+    <PARAM KEY='track_stmt_stat_level' VALUE='OFF,L0'/>
+    <PARAM KEY='enable_ts_compaction' VALUE='on'/>
+    <PARAM KEY='ts_consumer_workers' VALUE='4'/>
+    <PARAM KEY='timezone' VALUE='PRC'/>
+    <PARAM KEY='log_timezone' VALUE='PRC'/>
+  </dn>
+  <gtm>
+    <PARAM KEY='gtm_num_threads' VALUE='1024'/>
+    <PARAM KEY='gtm_option' VALUE='1'/>
+  </gtm>
+</root>
