@@ -1,9 +1,0 @@
-#!/usr/software/python3/bin/python3
-
-import sys
-sys.path.append('/usr/software/knowl')
-from hola import main
-
-
-if __name__ == '__main__':
-    main()

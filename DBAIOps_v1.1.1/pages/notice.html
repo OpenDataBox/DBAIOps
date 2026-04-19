@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="notice.meta.title">DBAIOps v1.1.1 版本更新公告</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #F4F6F9;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            width: 900px;
+            max-width: 100%;
+            overflow: hidden;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 30px;
+            background: #F8F9FA;
+        }
+
+        .notice-card {
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 24px;
+            margin-bottom: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .notice-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .notice-card.important {
+            background: white;
+            border-left-color: #ffc107;
+        }
+
+        .notice-card.warning {
+            background: white;
+            border-left-color: #dc3545;
+        }
+
+        .notice-card.info {
+            background: white;
+            border-left-color: #17a2b8;
+        }
+
+        .notice-card.success {
+            background: white;
+            border-left-color: #28a745;
+        }
+
+        .notice-card h3 {
+            color: #333;
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .notice-card h3::before {
+            content: '✨';
+            margin-right: 12px;
+            font-size: 1.4rem;
+        }
+
+        .notice-card.important h3::before {
+            content: '🔔';
+        }
+
+        .notice-card.info h3::before {
+            content: 'ℹ️';
+        }
+
+        .notice-card.success h3::before {
+            content: '🎉';
+        }
+
+        .notice-card p {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+        }
+
+        .notice-card ul {
+            color: #555;
+            line-height: 1.8;
+            margin-left: 24px;
+            font-size: 0.95rem;
+        }
+
+        .notice-card li {
+            margin-bottom: 12px;
+        }
+
+        .feature-list {
+            background: #F8F9FA;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-item {
+            margin-bottom: 16px;
+            padding-left: 8px;
+        }
+
+        .feature-item strong {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #856404;
+        }
+
+        .download-info {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 1px solid #c3e6cb;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .download-info h3 {
+            color: #155724;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .download-info h3::before {
+            content: '📥';
+            margin-right: 12px;
+        }
+
+        .download-info p {
+            color: #155724;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .download-info a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .download-info a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        .maintenance-info {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
+            border: 1px solid #ffc107;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .maintenance-info h3 {
+            color: #856404;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .maintenance-info h3::before {
+            content: '⚠️';
+            margin-right: 12px;
+        }
+
+        .maintenance-info p {
+            color: #856404;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .footer {
+            background: #343a40;
+            color: white;
+            text-align: center;
+            padding: 24px;
+            font-size: 0.9rem;
+        }
+
+        .signature {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #c3e6cb;
+            text-align: left;
+            font-style: italic;
+            color: #155724;
+        }
+
+        .signature strong {
+            color: #155724;
+            font-weight: 600;
+        }
+
+        @media (max-width: 850px) {
+            .container {
+                width: 95%;
+                margin: 10px;
+                border-radius: 12px;
+            }
+
+            .header {
+                padding: 24px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .content {
+                padding: 24px 20px;
+            }
+
+            .notice-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body data-page="notice">
+    <div class="container">
+        <div class="header">
+            <h1>DBAIOps v1.1.1 版本更新</h1>
+            <div class="subtitle">全新功能上线，体验全面升级</div>
+            <div class="version-badge">Version 1.1.1</div>
+        </div>
+
+        <div class="content">
+            <!-- 新功能概览 -->
+            <div class="notice-card success">
+                <h3>🎊 版本亮点</h3>
+                <p>本次更新带来了多项重要功能优化和体验提升，涵盖 AWR 分析、巡检诊断、SQL 优化等核心模块，以及整体性能和用户体验的全面优化。</p>
+            </div>
+
+            <!-- AWR分析新功能 -->
+            <div class="notice-card">
+                <h3>AWR 分析模块新功能</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <strong>📊 脱敏脚本下载：</strong>新增 AWR/KWR 脱敏脚本下载功能，支持 Oracle AWR 和 KingBase KWR 报告的脱敏处理，有效保护敏感信息，提升数据安全性。
+                    </div>
+                    <div class="feature-item">
+                        <strong>🔗 便捷下载链接：</strong>提供 Gitee 和 GitHub 双平台下载地址，支持一键跳转，下载更便捷。
+                    </div>
+                    <div class="feature-item">
+                        <strong>📋 任务状态优化：</strong>优化历史记录筛选功能，任务状态下拉项顺序调整为：全部、执行中、成功、失败，查找更高效。
+                    </div>
+                    <div class="feature-item">
+                        <strong>💡 智能提示：</strong>根据选择的数据库类型（Oracle/KingBase）自动显示对应的脱敏脚本类型和说明文案。
+                    </div>
+                </div>
+            </div>
+
+            <!-- 巡检诊断新功能 -->
+            <div class="notice-card">
+                <h3>巡检诊断模块新功能</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <strong>📥 脚本采集器优化：</strong>重构脚本采集器下载方式，提供 Gitee 和 GitHub 双平台下载链接，支持根据选择的数据库动态显示对应的脚本采集器下载地址。
+                    </div>
+                    <div class="feature-item">
+                        <strong>📝 详细说明文档：</strong>为脚本采集器添加详细的功能说明，帮助用户更好地理解和使用采集工具。
+                    </div>
+                    <div class="feature-item">
+                        <strong>🎨 界面优化：</strong>优化下载链接的展示方式，采用上下排列布局，视觉效果更清晰。
+                    </div>
+                    <div class="feature-item">
+                        <strong>⚡ 性能提升：</strong>优化初始化流程，减少不必要的延迟，提升页面加载速度。
+                    </div>
+                </div>
+            </div>
+
+            <!-- SQL优化新功能 -->
+            <div class="notice-card">
+                <h3>SQL 优化模块新功能</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <strong>📥 脚本采集器优化：</strong>与巡检诊断模块同步优化，提供统一的脚本采集器下载体验，支持 Gitee 和 GitHub 双平台。
+                    </div>
+                    <div class="feature-item">
+                        <strong>📚 功能说明：</strong>添加 SQL 优化采集脚本的详细说明，帮助用户了解脚本的用途和使用场景。
+                    </div>
+                    <div class="feature-item">
+                        <strong>🔍 历史记录优化：</strong>优化任务状态筛选功能，提升查询效率。
+                    </div>
+                </div>
+            </div>
+
+            <!-- 其他优化 -->
+            <div class="notice-card info">
+                <h3>其他重要优化</h3>
+                <ul>
+                    <li><strong>性能优化：</strong>全面优化插件启动速度，减少初始化延迟，点击插件图标后响应更快。</li>
+                    <li><strong>错误处理：</strong>优化网络请求错误处理机制，添加超时控制，避免长时间等待阻塞操作。</li>
+                    <li><strong>用户体验：</strong>优化界面交互，改进错误提示方式，减少不必要的控制台错误信息。</li>
+                    <li><strong>代码优化：</strong>重构部分核心代码，提升代码质量和可维护性。</li>
+                    <li><strong>稳定性提升：</strong>修复多个已知问题，提升插件整体稳定性和可靠性。</li>
+                </ul>
+            </div>
+
+            <!-- 下载信息 -->
+            <div class="download-info">
+                <h3>📥 新版本下载</h3>
+                <p><strong>Edge 插件市场：</strong>DBAIOps v1.1.0 及之后的版本已上架 Microsoft Edge 插件市场，您可以直接在 Edge 浏览器中搜索 "DBAIOps" 进行下载和安装。</p>
+                <p><strong>下载地址：</strong><a href="https://microsoftedge.microsoft.com/addons/detail/bicqa/kecopfljiodlfeohhbmolnbaamhfenkm" target="_blank">Microsoft Edge Add-ons - DBAIOps</a></p>
+                <p style="margin-top: 16px;"><strong>提示：</strong>建议所有用户尽快升级到最新版本，以获得最佳的使用体验和最新的功能支持。</p>
+            </div>
+
+            <!-- 维护信息 -->
+            <div class="maintenance-info">
+                <h3>⚠️ 版本维护说明</h3>
+                <p><strong>老版本维护：</strong>DBAIOps v1.1.0 之前的版本将维护至 <span class="highlight">2026年1月31日</span>。在此日期之后，我们将不再为这些旧版本提供功能更新和安全补丁。</p>
+                <p><strong>升级建议：</strong>为了确保您能够持续获得功能更新、安全补丁和技术支持，强烈建议您尽快升级到 v1.1.0 或更高版本。</p>
+                <p><strong>技术支持：</strong>如果您在升级过程中遇到任何问题，请及时联系我们的技术支持团队。</p>
+            </div>
+
+            <!-- 联系方式 -->
+            <div class="download-info">
+                <h3>📞 联系我们</h3>
+                <p><strong>官网：</strong><a href="https://www.dbaiops.com/" target="_blank">https://www.dbaiops.com/</a></p>
+                <p><strong>客服热线：</strong><a href="tel:+86-400-880-0486">400 880 0486</a></p>
+                <p><strong>地址：</strong>北京市朝阳区裕民路12号元辰鑫大厦E1座516</p>
+                <div class="signature">
+                    <span>感谢您一直以来的支持与信任！</span><br>
+                    <span><strong>DBAIOps 团队</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 DBAIOps. All rights reserved.</p>
+            <p>感谢您一直以来的支持与信任</p>
+        </div>
+    </div>
+</body>
+<script src="../i18n/i18n.js"></script>
+<script src="../legal.js"></script>
+</html>

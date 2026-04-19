@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBAIOps - DBAIOps 智能问答助手</title>
+    <link id="favicon" rel="icon" type="image/png" href="../icons/logo.png">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #F4F6F9;
+            color: #333;
+        }
+
+        .page-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #e9ecef;
+            padding: 20px;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .logo-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .logo-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin: 5px 0 0 0;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: #e9ecef;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background: white;
+            margin: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .selector-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .selector-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .selector-group label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .selector-group select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-width: 120px;
+        }
+
+        .input-container {
+            position: relative;
+            max-width: 600px;
+            margin: 40px auto;
+        }
+
+        .input-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .input-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+        }
+
+        .input-subtitle {
+            font-size: 18px;
+            color: #666;
+            margin: 0;
+        }
+
+        .question-input {
+            width: 100%;
+            min-height: 120px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        .question-input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .ask-button {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 50px;
+            height: 50px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ask-button:hover {
+            background: #0056b3;
+        }
+
+        .ask-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .result-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            border-left: 4px solid #007bff;
+            margin-top: 40px;
+            display: none;
+        }
+
+        .question-display {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            display: none;
+        }
+
+        .result-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 0 20px 0;
+        }
+
+        .result-text {
+            font-size: 16px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+
+        .result-actions {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            text-align: center;
+        }
+
+        .action-button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .action-button:hover {
+            background: #5a6268;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-container">
+        <!-- 左侧边栏 -->
+        <aside class="sidebar">
+            <div class="logo-section">
+                <img src="../icons/logo.png" alt="DBAIOps" class="logo-icon">
+                <h1 class="logo-title">DBAIOps</h1>
+                <p class="logo-subtitle">国产数据库智能问答</p>
+            </div>
+
+            <button class="action-btn" id="pageSummaryBtn">
+                <span>📋</span>
+                <span>结论摘要</span>
+            </button>
+            <button class="action-btn" id="translateBtn">
+                <span>🌐</span>
+                <span>翻译结论</span>
+            </button>
+            <button class="action-btn" id="historyBtn">
+                <span>📚</span>
+                <span>历史记录</span>
+            </button>
+            <button class="action-btn" id="helpBtn">
+                <span>❓</span>
+                <span>使用说明</span>
+            </button>
+        </aside>
+
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <h2 class="page-title">智能问答</h2>
+
+            <div class="selector-row">
+                <div class="selector-group">
+                    <label>选择模型：</label>
+                    <select id="modelSelect">
+                        <option value="">请选择模型</option>
+                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                        <option value="gpt-4">GPT-4</option>
+                        <option value="claude-3">Claude-3</option>
+                    </select>
+                </div>
+                <div class="selector-group">
+                    <label>选择知识库：</label>
+                    <select id="knowledgeBaseSelect">
+                        <option value="">不使用知识库</option>
+                        <option value="oracle">Oracle 知识库</option>
+                        <option value="mysql">MySQL 知识库</option>
+                        <option value="postgresql">PostgreSQL 知识库</option>
+                    </select>
+                </div>
+                <div class="selector-group">
+                    <label>参数规则：</label>
+                    <select id="parameterRuleSelect">
+                        <option value="">默认规则</option>
+                        <option value="creative">创意模式</option>
+                        <option value="precise">精确模式</option>
+                    </select>
+                </div>
+                <div class="selector-group">
+                    <label>&nbsp;</label>
+                    <button id="settingsBtn"
+                        style="padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                        ⚙️ 设置
+                    </button>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <div class="input-header">
+                    <h2 class="input-title">DBAIOps</h2>
+                    <p class="input-subtitle">国产数据库智能问答</p>
+                </div>
+                <textarea id="questionInput" class="question-input" placeholder="请输入您的问题..." rows="5"></textarea>
+                <button id="askButton" class="ask-button" title="提问">↑</button>
+            </div>
+
+            <div id="resultContainer" class="result-container">
+                <div id="questionDisplay" class="question-display">
+                    <div style="font-size: 14px; color: #666; margin-bottom: 8px;">您的问题：</div>
+                    <div id="questionText"></div>
+                </div>
+                <h3 class="result-title">回答：</h3>
+                <div id="resultText" class="result-text"></div>
+                <div class="result-actions">
+                    <button id="copyButton" class="action-button">复制</button>
+                    <button id="clearButton" class="action-button">清空</button>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>版本 1.1</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        class BicQAPage {
+            constructor() {
+                this.initElements();
+                this.bindEvents();
+            }
+
+            initElements() {
+                this.questionInput = document.getElementById('questionInput');
+                this.askButton = document.getElementById('askButton');
+                this.resultContainer = document.getElementById('resultContainer');
+                this.resultText = document.getElementById('resultText');
+                this.questionDisplay = document.getElementById('questionDisplay');
+                this.questionText = document.getElementById('questionText');
+                this.copyButton = document.getElementById('copyButton');
+                this.clearButton = document.getElementById('clearButton');
+            }
+
+            bindEvents() {
+                this.askButton.addEventListener('click', () => this.handleAskQuestion());
+                this.questionInput.addEventListener('keydown', (e) => {
+                    // 处理回车键事件
+                    if (e.key === 'Enter') {
+                        // 如果按下了Shift键，允许换行
+                        if (e.shiftKey) {
+                            // 不阻止默认行为，允许换行
+                            return;
+                        }
+
+                        // 如果按下了Ctrl键，执行提问操作
+                        if (e.ctrlKey) {
+                            e.preventDefault();
+                            this.handleAskQuestion();
+                            return;
+                        }
+
+                        // 普通回车键，执行提问操作
+                        e.preventDefault();
+                        this.handleAskQuestion();
+                    }
+                });
+                this.questionInput.addEventListener('input', () => this.updateButtonState());
+                this.copyButton.addEventListener('click', () => this.copyResult());
+                this.clearButton.addEventListener('click', () => this.clearResult());
+            }
+
+            async handleAskQuestion() {
+                const question = this.questionInput.value.trim();
+                if (!question) {
+                    alert('请输入问题！');
+                    return;
+                }
+
+                this.setLoading(true);
+
+                try {
+                    this.showQuestion(question);
+                    await this.simulateAPIResponse(question);
+                } catch (error) {
+                    console.error('提问失败:', error);
+                    this.showResult('抱歉，处理您的问题时出现了错误。请稍后重试。');
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+
+            showQuestion(question) {
+                this.questionText.textContent = question;
+                this.questionDisplay.style.display = 'block';
+            }
+
+            async simulateAPIResponse(question) {
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                const response = `关于"${question}"的回答：
+
+这是一个模拟的AI回答。在实际应用中，这里会调用真实的AI API来生成回答。
+
+主要特点：
+• 智能分析问题
+• 提供准确答案
+• 支持多种格式
+• 实时响应
+
+如果您需要配置真实的API，请在设置中配置相应的API密钥和端点。`;
+
+                this.showResult(response);
+            }
+
+            showResult(text) {
+                this.resultContainer.style.display = 'block';
+                this.resultText.textContent = text;
+                this.resultContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            setLoading(loading) {
+                if (loading) {
+                    this.askButton.disabled = true;
+                    this.askButton.textContent = '⏳';
+                } else {
+                    this.askButton.disabled = false;
+                    this.askButton.textContent = '↑';
+                    this.updateButtonState();
+                }
+            }
+
+            updateButtonState() {
+                const hasInput = this.questionInput.value.trim().length > 0;
+                this.askButton.disabled = !hasInput;
+            }
+
+            async copyResult() {
+                try {
+                    await navigator.clipboard.writeText(this.resultText.textContent);
+                    alert('结果已复制到剪贴板！');
+                } catch (error) {
+                    alert('复制失败，请手动复制。');
+                }
+            }
+
+            clearResult() {
+                this.resultContainer.style.display = 'none';
+                this.questionDisplay.style.display = 'none';
+                this.questionInput.value = '';
+                this.updateButtonState();
+            }
+        }
+
+        // 更新页面favicon
+        function updateFavicon(isDarkMode) {
+            try {
+                const favicon = document.getElementById('favicon');
+                if (favicon && typeof chrome !== 'undefined' && chrome.runtime) {
+                    const iconFileName = isDarkMode ? 'logo_dark.png' : 'logo.png';
+                    const iconPath = chrome.runtime.getURL(`icons/${iconFileName}`);
+                    favicon.href = iconPath;
+                    console.log('页面favicon已更新为:', iconPath, isDarkMode ? '(深色模式)' : '(浅色模式)');
+                } else if (favicon) {
+                    // 备用方案：使用相对路径
+                    const iconPath = isDarkMode ? '../icons/logo_dark.png' : '../icons/logo.png';
+                    favicon.href = iconPath;
+                    console.log('页面favicon已更新为(相对路径):', iconPath);
+                }
+            } catch (error) {
+                console.error('更新favicon失败:', error);
+            }
+        }
+
+        // 检测系统主题并更新favicon
+        function detectAndUpdateFavicon() {
+            try {
+                const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                updateFavicon(isDarkMode);
+
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                mediaQuery.addEventListener('change', (e) => {
+                    updateFavicon(e.matches);
+                });
+            } catch (error) {
+                console.error('检测主题失败:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 检测并更新favicon
+            detectAndUpdateFavicon();
+
+            new BicQAPage();
+        });
+    </script>
+</body>
+
+</html>

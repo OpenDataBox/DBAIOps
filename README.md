@@ -1,192 +1,175 @@
 # DBAIOps
-This is the code repository of **DBAIOps**, a novel database operation and maintenance (O&M) system that integrates expert experience to achieve practical anomaly detection, diagnosis, and recovery. Specifically, it conducts database O&M based on the following techniques:
+This repository now tracks the current **DBAIOps** workspace after the project was refactored from a server-side O&M deployment bundle to a browser-extension-based database knowledge assistant. The active worktree now carries the browser-extension-based DBAIOps assistant while keeping the repository history.
 
-- **(1) O&M Maintenance Graph:** a graph-based experience model to represent various possible diagnosis paths within O&M experience;
-- **(2) Correlation-Aware Anomaly Model:** capture implicit correlations across metrics and real-world anomalies and initialize knowledge graph exploration during online diagnosis;
-- **(3) O&M Path Exploration:** a two-stage graph evolution mechanism that adaptively explores possible diagnosis paths for the input anomaly;
-- **(4) Reasoning LLM Based Diagnosis:** prompt reasoning LLM to reason over these diagnosis paths and generate diagnosis reports with specific recovery solutions.
+Current DBAIOps focuses on the following capabilities:
 
-Evaluation over four mainstream database systems demonstrates that DBAIOps outperforms state-of-the-art baselines, **47.85%** higher in diagnosis accuracy and report interpretability. The structure is as follows:
+- **Intelligent database knowledge Q&A:** retrieve answers for mainstream and domestic database engines.
+- **AWR report analysis:** parse Oracle AWR reports and generate structured diagnosis results.
+- **Inspection analysis:** review inspection tasks, history records, and issue summaries.
+- **SQL optimization assistance:** support targeted optimization workflows and report desensitization.
+- **Configurable model access:** connect external knowledge services and third-party model providers.
 
-* [DBAIOps Platform Deployment Guide](#dbaiops-platform-deployment-guide)
+The structure is as follows:
 
-    * [1. System Preparation](#1-system-preparation)
-        * [1.1 Hardware Requirements](#11-hardware-requirements)
-        * [1.2 Firewall Port Configuration](#12-firewall-port-configuration)
-        * [1.3 Upload Installation Media](#13-upload-installation-media)
-        
-    * [2. Single-Node Installation](#2-single-node-installation)
-        * [2.1 Configure YUM](#21-configure-yum)
-        
-        * [2.2 Installation](#22-installation)
-        
-        * [2.3 Service Management Commands](#23-service-management-commands)
-        
-        * [2.4 Accessing DBAIOps Platform](#24-accessing-dbaiops-platform)        
-        
-
-* [Case Study of Oracle Diagnosis Report](#case-study-of-oracle-diagnosis-report)
-
-Note that the full content about the case study of the diagnosis reports can be found at the [Appedinx_Diagnosis_Report](https://anonymous.4open.science/r/DBAIOps-80F8/Appedinx_Diagnosis_Report.pdf).
+* [DBAIOps Browser Extension Guide](#dbaiops-browser-extension-guide)
+    * [1. Repository Overview](#1-repository-overview)
+        * [1.1 Core Capabilities](#11-core-capabilities)
+        * [1.2 Repository Layout](#12-repository-layout)
+    * [2. Local Loading and Basic Configuration](#2-local-loading-and-basic-configuration)
+        * [2.1 Load the Unpacked Extension](#21-load-the-unpacked-extension)
+        * [2.2 Registration and Knowledge Service Configuration](#22-registration-and-knowledge-service-configuration)
+        * [2.3 Model Provider Configuration](#23-model-provider-configuration)
+    * [3. Analysis Features](#3-analysis-features)
+        * [3.1 AWR Report Analysis](#31-awr-report-analysis)
+        * [3.2 Inspection Analysis](#32-inspection-analysis)
+        * [3.3 SQL Optimization and Desensitization](#33-sql-optimization-and-desensitization)
+    * [4. Preserved Assets and Operational Notes](#4-preserved-assets-and-operational-notes)
 
 ---
 
-# DBAIOps Platform Deployment Guide
+# DBAIOps Browser Extension Guide
 
 ```
-├── bin                         # DBAIOps installation and deployment scripts
-├── webserver                   # Frontend webserver configuration
-├── fstaskpkg                   # Task platform configurations
-├── knowl                       # Knowledge graph base scripts
-├── colscript                   # Python3 collection scripts (health & cib metrics)
-├── pgconf                      # PostgreSQL initialization config for DSmart metadata
-└── phantomjsconf               # Frontend webserver JS plugin configurations
+├── DBAIOps_v1.1.1               # Unpacked browser extension source
+├── DBAIOps_v1.1.1.zip           # Preserved release archive
+├── assets                      # Screenshots, demo video, and documentation media
+├── icons                       # Repository-level branding assets
+├── README.md                   # English usage guide in DBAIOps style
+├── README_ZH.md                # Chinese usage guide in DBAIOps style
+└── LICENSE                     # License file from the extension project
 ```
 
-## 1. System Preparation
+## 1. Repository Overview
 
-### 1.1 Hardware Requirements
+### 1.1 Core Capabilities
 
-#### Minimum Configuration (for <20 database instances)
-| Purpose | Hardware Specs | Supported OS | IP Address | Qty | Notes |
-|---------|---------------|--------------|------------|-----|-------|
-| Database, Task Platform, Web Server | 16C/32GB/600GB | RedHat 7.2+ (YUM configured)<br>CentOS 7.2+ (YUM configured)<br>SUSE 12 SP4 (zypper configured)<br>Kylin V10 SP1/SP2/SP3 | 1 | 1 | No restrictions |
+| Module | Summary |
+|--------|---------|
+| Knowledge Q&A | Query database knowledge bases for SQL syntax, troubleshooting, tuning, and best practices |
+| AWR Analysis | Upload Oracle AWR HTML reports and generate structured AI-assisted analysis |
+| Inspection Analysis | Review database inspection tasks and historical analysis records |
+| SQL Optimization | Submit SQL optimization tasks and inspect returned recommendations |
+| Service Integration | Configure knowledge-service endpoints, API keys, and model providers |
 
-#### Recommended Configuration (for >60 database instances)
-| Purpose | Hardware Specs | Supported OS | IP Address | Qty | Notes |
-|---------|---------------|--------------|------------|-----|-------|
-| Database Server | 16C/64GB/1TB | RedHat 7.2+<br>CentOS 7.2+<br>SUSE 12 SP4 | 3 | 1 | Physical server required |
-| Web Server & Task Platform | 16C/64GB/300GB | RedHat 7.2+<br>CentOS 7.2+<br>SUSE 12 SP4 | 3 | 3 | No restrictions |
+### 1.2 Repository Layout
 
-**Notes:**
-- DBAIOps database server can be installed in any directory (only disk space required);
-- Distributed installation requires root SSH passwordless login between DBAIOps servers during setup (can be disabled post-installation). Single-node installation doesn't require this.
+**Extension Entry Folder:**
+```
+/data/wei/program/DBAIOps/DBAIOps_v1.1.1
+```
 
-### 1.2 Firewall Port Configuration
+**Key Configuration Files:**
+- `DBAIOps_v1.1.1/manifest.json`
+- `DBAIOps_v1.1.1/config/registration.json`
+- `DBAIOps_v1.1.1/config/knowledge_service.json`
 
-**Between Ops machine and DBAIOps servers:**
-- Required ports: 22, 18081, 18090, 28080
-
-**Between DBAIOps servers and monitored databases:**
-- Oracle: 11521, 1521
-- MySQL: 3306
-- PostgreSQL: 5432
-- DM8: 5236
-
-### 1.3 Upload Installation Media
-Upload installation package to DBAIOps server
+**Default Service Endpoints:**
+- Registration service: configured in `DBAIOps_v1.1.1/config/registration.json`
+- Knowledge service: configured in `DBAIOps_v1.1.1/config/knowledge_service.json`
 
 ---
 
-## 2. Single-Node Installation
+## 2. Local Loading and Basic Configuration
 
-### 2.1 Configure YUM
-Configure YUM repo:
-```
-mount /dev/sr0 /mnt
-vi /etc/yum.repos.d/local.repo
-```
+### 2.1 Load the Unpacked Extension
 
-Install dependencies:
-```
-cd /usr/software/bin
-./DBAIOps-system-package.sh -install
-```
-
-### 2.2 Installation
-
-#### Step 1: Execute Installation
+1. Open the browser extension management page.
+2. Enable developer mode.
+3. Click **Load unpacked**.
+4. Select the directory below:
 ```bash
-cd /usr/software/bin
-./DBAIOps.sh -install
+/data/wei/program/DBAIOps/DBAIOps_v1.1.1
 ```
+5. Confirm that the extension icon and popup page can be opened normally.
 
-#### Step 2: Select Deployment Type
-Select deployment type [Default is single-node]:
-- Single-node deployment
-- Distributed deployment (requires manual role.cfg configuration)
+### 2.2 Registration and Knowledge Service Configuration
 
-#### Step 3: OS Selection
+#### Step 1: User Registration
+Open the settings page and fill in user information. The extension uses `config/registration.json` as the default registration-service template and can persist user-specific updates in browser storage.
 
-Choose OS type [Select according to your OS]:
-- RedHat
-- CentOS
-
-#### Step 4: Installation Progress
-- Installation typically takes 1-1.5 hours depending on system performance
-- RPM packages will be automatically installed
-
-#### Step 5: Post-Installation
-After successful installation, restart DBAIOps services:
+#### Step 2: Knowledge Service
+Enter the knowledge-service configuration page and set the API key and service URL. The default template comes from:
 ```bash
-/usr/software/bin/DBAIOps.sh -restart
+DBAIOps_v1.1.1/config/knowledge_service.json
 ```
 
-### 2.3 Service Management Commands
+#### Step 3: Configuration Validation
+After saving the configuration, verify that:
+- the target knowledge base can be selected;
+- the configured service endpoint is reachable;
+- the popup page can submit and receive messages.
 
-| Command | Description |
-|---------|-------------|
-| `./DBAIOps.sh -start` | Start all DBAIOps services |
-| `./DBAIOps.sh -stop` | Stop all DBAIOps services |
-| `./DBAIOps.sh -status` | Check service status |
-| `./DBAIOps.sh -restart` | Restart all services |
+### 2.3 Model Provider Configuration
 
-### 2.4 Accessing DBAIOps Platform
+DBAIOps currently relies on browser-side configuration for model providers.
 
-**Web Interface:**
+Typical workflow:
+1. Open **Settings** -> **Models & Service Providers**.
+2. Add a provider such as `ollama`, `deepseek`, or another OpenAI-compatible endpoint.
+3. Fill in the API base URL and API key if required.
+4. Run the built-in test action and save the selected models.
+
+**Local Ollama Example:**
+```bash
+http://localhost:11434/v1
 ```
-http://<SERVER_IP>:18081/DBAIOps
-```
-
-**Default Credentials:**
-```
-Username: admin
-Password: admin@123
-```
-
-**Security Notice:**
-- Change the default password immediately after first login;
-- Recommended to use a strong password following your organization's security policy;
-- For production environments, consider implementing additional security measures (IP restrictions, 2FA, etc.).
-
-# Case Study of Oracle Diagnosis Report
-
-**Anomaly:** *LOG SYNCHRONIZATION DELAY*, which detects slowdowns caused by log-writing operations. When a transaction commits or rolls back, forcing a session to wait for the log writer to flush redo logs, the system can degrade significantly if I/O capacity is insufficient. 
-
-**Abnormal Metrics List:**
-
-| Metric ID | Metric Name                             | Min     | Max     | Avg    |
-|-----------|-----------------------------------------|---------|---------|--------|
-| 2184301   | log file sync average wait time        | 1.08 ms | 15.2 ms | 6.0 ms |
-| 2184305   | log file parallel write average wait time | 0.78 ms | 7.09 ms | 3.0 ms |
-| 000014    | Mem unavailable                         | 72.82   | 73.07   | 73.0   |
-
-**Root Cause:**
-
-**(1) Insufficient I/O Performance of REDO Log Storage:**  
-- Evidence Chains:  
-  - Metric 2184301 (*log file sync*): max = 15.2 ms, avg = 6.0 ms (abnormal)  
-  - Metric 2184305 (*log file parallel write*): max = 7.09 ms, avg = 3.0 ms (abnormal)  
-- Anomaly Analysis:  
-  - According to the formula: log_file_sync / log_file_parallel_write = 6.0 / 3.0 = 2  
-  - Ratio in range (1.5, 2] ⇒ Storage I/O performance is a primary factor  
-
-**(2) Intermittent I/O Pressure Spikes During Log Writing:**  
-- Evidence Chains:  
-  - At 06:00, log file sync spiked to 15.2 ms (vs. hourly avg 4.54 ms)  
-  - log file parallel write peaked at 7.09 ms (high for mechanical disks)  
-  - OS I/O latency = 0.47 ms (normal)  
-- Anomaly Analysis:  
-  - Storage likely under transient load  
 
 ---
 
-### 💬 DBA Feedback
-> ✅ The predefined hypothesis of the experiment is that the bottleneck lies in I/O storage.  
-> ✅ Both root causes align with this hypothesis (**first evaluation criterion** satisfied)  
->   
-> ✅ Evidence chains are logically consistent with Oracle/OS theory (**second criterion**)  
->   
-> ✅ All data comes from actual experiments with **no hallucinations** (**third criterion**)  
->   
-> 🎯 **Final Accuracy Assessment: 100%**
+## 3. Analysis Features
+
+### 3.1 AWR Report Analysis
+
+DBAIOps provides an Oracle AWR analysis workflow inside the extension UI.
+
+**Supported Input:**
+- Oracle single-instance AWR HTML reports
+- RAC AWR reports generated through `awrrpt.sql` or `awrrpti.sql`
+
+**Current Notes:**
+- AWR comparison reports generated through `awrddrpi.sql` are not the primary target.
+- Global reports generated through `awrgrpt.sql` should be validated before production use.
+
+**Typical Steps:**
+1. Open the AWR analysis panel.
+2. Fill in the issue summary and receiving email if required.
+3. Upload the AWR report.
+4. Select the report language.
+5. Submit the task and inspect the history list after processing.
+
+### 3.2 Inspection Analysis
+
+The extension also preserves the database inspection analysis workflow. It is intended for operational review scenarios where users need a summarized status view, historical task lookup, and issue follow-up.
+
+Common use cases include:
+- reviewing periodic inspection tasks;
+- checking generated summaries and abnormal findings;
+- rerunning historical records when model or service settings change.
+
+### 3.3 SQL Optimization and Desensitization
+
+DBAIOps keeps the SQL optimization and report-desensitization related modules from the extension project.
+
+These modules are intended for:
+- submitting SQL statements for optimization assistance;
+- reducing exposure of sensitive SQL text in uploaded reports;
+- preserving a browser-based workflow for database engineers and DBAs.
+
+---
+
+## 4. Preserved Assets and Operational Notes
+
+**Preserved Assets:**
+- `DBAIOps_v1.1.1.zip` is intentionally kept as the packaged release artifact.
+- `assets/DBAIOps_AWR_Analysis_Demo.mp4` is intentionally kept as the demo video.
+- `assets/DBAIOps_WeChat_Assistant_QR.jpg` and `assets/DBAIOps_Community_QR_Code.png` are intentionally kept as community support QR assets.
+- the screenshots under `assets/` are intentionally kept for usage documentation.
+
+**Repository Positioning:**
+- The repository history remains under **DBAIOps**.
+- The active browser-extension assets remain branded as **DBAIOps**.
+- This README is intentionally written in the older DBAIOps documentation style instead of the upstream marketing-style README.
+
+**Operational Note:**
+- For local verification, load `DBAIOps_v1.1.1` as an unpacked extension instead of trying to run the old DBAIOps deployment scripts.
+- If the browser configuration was modified previously, reset the extension settings before validating a new endpoint.
